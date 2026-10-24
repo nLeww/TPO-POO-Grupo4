@@ -100,3 +100,9 @@ SOLID:
 1.	Responsabilidad Única: Similar a la alta cohesión, cada función está ligada a una sola clase que tiene métodos específicos, ninguna clase realiza una tarea que escapa o va por fuera de su responsabilidad.
 2.	Abierto a extensiones, cerrado a modificaciones: de ser necesario, las clases pueden incluir más métodos, agregar clases adicionales o incluso utilizar más atributos, todo sin la necesidad de generar un cambio significativo dentro del sistema.
 3.	Sustitución sin sorpresas: También se tuvo en cuenta, mediante la creación de la clase Persona, que los atributos que esta tenga y les herede a otras clases estén dentro de un rango razonable y que tenga una lógica de inclusión.
+
+ACALARACION IMPORTANTE: SE SUBIO SOLO UN DIAGRAMA DE CLASES, DEBIDO A QUE SE CREO TENIENDO EN CUENTA DESDE EL INICIO GRASP Y SOLID, SE DISCUTIO EN CLASE Y SE LLEGO A LA CONCLUSION DE QUE SE PODIA ENVIAR UNO SOLO, SIEMPRE Y CUANDO SE JUSTIFICARA EL USO DE GRASP Y SOLID DE FORMA ACORDE A LO DICHO EN CLASE.
+
+
+
+
