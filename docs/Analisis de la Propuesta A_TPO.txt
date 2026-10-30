@@ -1,0 +1,108 @@
+---------------------------
+Análisis del enunciado    -
+---------------------------
+
+==================
+ACTORES Y CLASES =
+==================
+
+1.	Dueño del lote: nombre, apellido, documento, teléfono y correo electrónico
+2.	Lote: Superficie en metros cuadrados y dueño
+3.	Habitantes: Mismos datos que el dueño
+4.	Personal (Guardias con turno y puesto, Empleados de mantenimiento con especialidad) 
+5.	Mensajes: tipo (Reclamo [Seguridad, mantenimiento, convivencia, administrativo] o solicitud), numero, fecha, descripción, prioridad (seguridad es alta, mantenimiento es media y convivencia/administración son bajas), estado (en orden, Abierto, Asignado, en curso, resuelto y cerrado), lote, comentario y persona. Se asigna a un empleado
+6.	Expensa: lote, periodo, importe, fecha de vencimiento, Estado (impago o pago) e interés por mora
+7.	Dispositivos: Tipo de dispositivo (Cámara de seguridad con resolución y cantidad de días que grabo , Luminaria con tipo de lámpara y potencia), código, sector, fecha de instalación y estado(activo o inactivo)
+8.	Orden de mantenimiento: Empleado, fecha de apertura, prioridad, descripción del trabajo y fecha de cierre.
+9.	Visita: Nombre, documento (visitante), lote , fecha , franja horaria, hora de ingreso y salida
+
+============================
+Requerimientos funcionales =
+============================
+
+1.	Registrar invitación
+2.	Emitir expensa
+3.	Emitir Importe por mora
+4.	Enviar mensaje (Reclamo o solicitud)
+5.	Asignar empleado
+6.	Emitir orden de mantenimiento
+
+===============================
+Relaciones (de multiplicidad) =
+===============================
+
+1.	Lotes y dueños: Un dueño puede tener más de un lote a su nombre, pero un lote solo tiene un dueño.
+2.	Orden de mantenimiento y empleado: la orden solo tiene un empleado asignado, pero un empleado puede tener un máximo de 5 ordenes
+3.	Lote y habitante: en un lote, puede vivir más de una personas, pero una persona no puede vivir en más de un lote
+
+===================
+Reglas de Negocio =
+===================
+
+------------------------
+Reclamos y solicitudes -
+------------------------
+• Cada reclamo tiene un tipo (seguridad, mantenimiento, convivencia, administrativo) y  una prioridad: seguridad es alta, mantenimiento es media, y convivencia y administrativo  son bajas.
+• Los estados son abierto, asignado, en curso, resuelto y cerrado, y solo se puede avanzar al  estado siguiente. El vecino puede reabrir un reclamo resuelto dentro de los 5 días; pasado  ese plazo sin respuesta, se cierra.
+• Cada reclamo tiene un único responsable asignado, y ningún empleado puede tener más  de 5 reclamos en curso a la vez.
+• Un reclamo de prioridad alta que no fue atendido en 24 horas se escala al administrador.
+• Solo el titular del lote o una persona autorizada por él puede presentar reclamos.
+
+------------------
+Expensas y pagos -
+------------------
+
+• La expensa mensual de cada lote es el presupuesto del mes multiplicado por el coeficiente  de participación del lote (según su superficie).
+• El vencimiento es el día 10 de cada mes. Desde esa fecha se cobra un interés punitorio del  3 % mensual sobre el saldo impago.
+• Los pagos parciales se imputan primero a los intereses y después al capital, empezando  por el período más antiguo.
+• Un lote con más de tres períodos impagos se marca como moroso y se genera una  notificación formal al titular. La condición se quita al regularizar la deuda.
+• Un pago registrado no se elimina: si hubo un error, se corrige con un asiento de ajuste.
+
+-----------------------
+Luminarias y cámaras  -
+-----------------------
+
+• Cada equipo tiene un estado: operativo, con falla, en reparación o fuera de servicio.
+• Una falla en una cámara genera una orden de mantenimiento de prioridad alta. Una falla  en una luminaria genera una de prioridad normal, que pasa a alta si fallan más de 3  luminarias del mismo sector.
+• Si una cámara está sin funcionar más de 48 horas, se informa al administrador.
+• Una orden de mantenimiento no se puede cerrar sin registrar la fecha, el técnico y la  descripción de la reparación.
+
+------------------
+Ingreso de visitas
+------------------
+
+• Toda visita requiere una autorización previa del vecino, con fecha y franja horaria de  vigencia. Sin autorización, seguridad no habilita el ingreso.
+• Los proveedores habituales pueden tener una autorización recurrente de hasta 30 días.
+• Cada ingreso se registra con su egreso, y una misma persona no puede registrar un  segundo ingreso sin haber salido.
+
+===========================
+Supuestos y aclaraciones  =
+===========================
+
+Tanto el dueño del lote como los habitantes deberían ser los encargados de emitir avisos de visita, debido a que puede ser el mismo dueño del lote el que vive, o los habitantes desean dejar ingresar a alguien. Los propios invitados temporales van a tener un identificador “Invitado”, que los deja inhabilitados para hacer otras invitaciones.
+El dueño asigna a los “habitantes” suponiendo que son personas que se quedan por un tiempo definido o indefinido, pero con la posibilidad de hacer reclamos
+En vez de separar los reclamos y solicitudes, es preferible que haya una interfaz “Mensaje” que habilite la posibilidad de enviar reclamos y solicitudes dependiendo del actor
+Dispositivos es un objeto que tiene datos base, que se especializan en Cámaras y Luminaria, cada una con datos extra que dependen del dispositivo.
+
+=======================
+Utilización de reglas =
+=======================
+
+GRASP:
+
+1.	Creador: en el diagrama, se indica que el objeto Reclamo solo puede ser creado por el Dueño del Lote o un habitante habilitado por el dueño para realizar dicha función, de esta manera, el concepto se utiliza para cumplir con esta norma, especificando quien crea a que entidad.
+2.	Experto en Información: se tuvo en cuenta que ciertas funciones deben ser hechas solo por las clases que tienen dicha información, por ejemplo, la clase Expensa es la encargada de calcular el coste por mora, en vez del administrador u otro actor.
+3.	Bajo Acoplamiento: De la misma manera que se intentó que los atributos estén ligados solo a las clases con todos los datos para llevar a cabo la tarea, también se minimizo al máximo la dependencia entre clases, para evitar que un cambio tenga que ser efectuado en más de una clase para hacerse posible. Ej: mediante la clase Persona se evita que si un dato debe estar en el resto de actores se tenga que modificar más de una clase.
+4.	Alta Cohesión: Todas las clases tienen un rol específico, y no cumplen funciones adicionales a las que deberían cumplir. Ej: el administrador ve reclamos, asigna empleados a los reclamos, emite expensas y ordenes de mantenimiento, sin embargo, quien indica las fallas es el personal y las visitas son verificadas por los guardias de seguridad.
+
+SOLID:
+
+1.	Responsabilidad Única: Similar a la alta cohesión, cada función está ligada a una sola clase que tiene métodos específicos, ninguna clase realiza una tarea que escapa o va por fuera de su responsabilidad.
+2.	Abierto a extensiones, cerrado a modificaciones: de ser necesario, las clases pueden incluir más métodos, agregar clases adicionales o incluso utilizar más atributos, todo sin la necesidad de generar un cambio significativo dentro del sistema.
+3.	Sustitución sin sorpresas: También se tuvo en cuenta, mediante la creación de la clase Persona, que los atributos que esta tenga y les herede a otras clases estén dentro de un rango razonable y que tenga una lógica de inclusión.
+
+ACALARACION IMPORTANTE: SE SUBIO SOLO UN DIAGRAMA DE CLASES, DEBIDO A QUE SE CREO TENIENDO EN CUENTA DESDE EL INICIO GRASP Y SOLID, SE DISCUTIO EN CLASE Y SE LLEGO A LA CONCLUSION DE QUE SE PODIA ENVIAR UNO SOLO, SIEMPRE Y CUANDO SE JUSTIFICARA EL USO DE GRASP Y SOLID DE FORMA ACORDE A LO DICHO EN CLASE.
+
+
+
+
