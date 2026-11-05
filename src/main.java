@@ -2,6 +2,8 @@ import lotes.Lote;
 import personal.*;
 import personas.Habitante;
 import personas.Titular;
+import reclamos.Reclamo;
+import reclamos.TipoReclamo;
 
 import java.time.LocalDate;
 
@@ -34,6 +36,22 @@ public class main {
         a1.agregarEmpleado(e1);
 
         a1.mostrarEmpleados();
+
+        Reclamo r1 = new Reclamo(1, TipoReclamo.SEGURIDAD,"Camara no fucniona",l1,t1);
+        System.out.println(r1);
+
+        r1.asignarResponsable(e1);
+        System.out.println(r1);
+
+        r1.avanzarEstado("Empezo a trabajar");
+        System.out.println(r1);
+
+        r1.avanzarEstado("camara arreglada");
+        r1.mostrarHistorial();
+
+        r1.reabrir(t1);
+
+        r1.mostrarHistorial();
 
     }
 }
