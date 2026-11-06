@@ -1,12 +1,19 @@
 package Orden_y_Expensa;
 
+import personas.Titular;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
 public class Expensa {
+    public Titular titular;
     public int periodo;
     public float importe;
     public Date fecha_vto;
     public int int_mora;
+
 
 
     public Expensa(int periodo, float importe, Date fecha_vto, int int_mora) {
@@ -49,9 +56,20 @@ public class Expensa {
     }
 
 
-    public float Calcular_interes(){
+    public float Calcular_interes() {
         int dias = 4;
         float totalExp = this.importe + (this.int_mora * dias);
         return totalExp;
+    }
+
+    public void RegistrarExpensa(int periodo, float importe, Date fecha_vto, int int_mora, float totalExp, Titular titular){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Expensas.txt", true))) {
+
+            bw.write(titular + "/" + periodo + "/" + importe + "/" + fecha_vto + "/" + int_mora + "/" + totalExp);
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 }

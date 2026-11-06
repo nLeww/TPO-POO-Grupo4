@@ -1,5 +1,8 @@
 package reclamos;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class HistorialReclamo {
@@ -46,6 +49,16 @@ public class HistorialReclamo {
     @Override
     public String toString() {
         return fecha +" " + estado + " " + observacion;
+    }
+
+    public void ResgitrarReclamo(EstadoReclamo estado, String observacion){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Reclamos.txt", true))) {
+
+            bw.write(estado + "/" + observacion + "/" + fecha );
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
 

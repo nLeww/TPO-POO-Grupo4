@@ -2,6 +2,9 @@ package Orden_y_Expensa;
 
 import personal.EmpleadoMantenimiento;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
 public class OrdenMantenimiento {
@@ -58,5 +61,16 @@ public class OrdenMantenimiento {
 
     public void setFecha_cierre(Date fecha_cierre) {
         this.fecha_cierre = fecha_cierre;
+    }
+
+    public void Crear_Registro(EmpleadoMantenimiento empleado_Asignado, Date fecha_apertura, String prioridad, String descripcion, Date fecha_cierre){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Ordenes.txt", true))) {
+
+        bw.write(empleado_Asignado + "/" + fecha_apertura + "/" + prioridad + "/" + descripcion + "/" + fecha_cierre);
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 }
