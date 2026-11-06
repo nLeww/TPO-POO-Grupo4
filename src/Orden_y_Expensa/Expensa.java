@@ -2,9 +2,7 @@ package Orden_y_Expensa;
 
 import personas.Titular;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 
 public class Expensa {
@@ -62,7 +60,7 @@ public class Expensa {
         return totalExp;
     }
 
-    public void RegistrarExpensa(int periodo, float importe, Date fecha_vto, int int_mora, float totalExp, Titular titular){
+    public void RegistrarExp(int periodo, float importe, Date fecha_vto, int int_mora, float totalExp, Titular titular){
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Expensas.txt", true))) {
 
             bw.write(titular + "/" + periodo + "/" + importe + "/" + fecha_vto + "/" + int_mora + "/" + totalExp);
@@ -71,5 +69,19 @@ public class Expensa {
             throw new RuntimeException(ex);
         }
 
+    }
+
+    public void LeerReclamos(){
+        try(BufferedReader br = new BufferedReader(new FileReader("Registro_de_Expensas.txt"))){
+
+            String linea;
+
+            while ((linea = br.readLine()) != null){
+                System.out.println(linea);
+            }
+
+        } catch (IOException ex){
+            throw new RuntimeException(ex);
+        }
     }
 }

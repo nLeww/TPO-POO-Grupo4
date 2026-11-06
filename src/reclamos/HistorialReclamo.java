@@ -1,8 +1,6 @@
 package reclamos;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 
 public class HistorialReclamo {
@@ -57,6 +55,20 @@ public class HistorialReclamo {
             bw.write(estado + "/" + observacion + "/" + fecha );
 
         } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void LeerReclamos(){
+        try(BufferedReader br = new BufferedReader(new FileReader("Registro_de_Reclamos.txt"))){
+
+            String linea;
+
+            while ((linea = br.readLine()) != null){
+                System.out.println(linea);
+            }
+
+        } catch (IOException ex){
             throw new RuntimeException(ex);
         }
     }
