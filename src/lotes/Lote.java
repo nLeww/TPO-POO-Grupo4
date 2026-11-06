@@ -1,5 +1,6 @@
 package lotes;
 
+import Orden_y_Expensa.Expensa;
 import personas.Habitante;
 import personas.Titular;
 
@@ -11,6 +12,8 @@ public class Lote {
     private double superficie;
     private Titular titular;
     private List<Habitante> habitantes;
+    private boolean Tardio;
+    public static List<Lote> lotes = new ArrayList<>(); //Para almacenar los lotes
 
     public void agregarHabitante(Habitante h){
         if (h==null){throw new IllegalArgumentException("personas.Habitante no puede ser nulo");}
@@ -29,33 +32,39 @@ public class Lote {
         this.superficie = superficie;
         this.titular = titular;
         habitantes = new ArrayList<>();
+        Tardio = false;
+
+        lotes.add(this); //lista que contendra todos los lotes
+
     }
+public static void getListaLotes(){
+        
+}
+
 
     public int getNumero() {
         return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
     }
 
     public double getSuperficie() {
         return superficie;
     }
 
-    public void setSuperficie(double superficie) {
-        this.superficie = superficie;
-    }
-
     public Titular getTitular() {
         return titular;
-    }
-
-    public void setTitular(Titular titular) {
-        this.titular = titular;
     }
 
     public List<Habitante> getHabitantes() {
         return new ArrayList<>(habitantes);
     }
+
+    public void setEstadoTardio(boolean Tardio) {
+        this.Tardio = Tardio;
+    }
+
+    @Override
+    public String toString() {
+        return  " " + numero + " " + superficie + " " + titular + " " + habitantes;
+    }
 }
+

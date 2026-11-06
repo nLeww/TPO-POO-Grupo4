@@ -60,7 +60,7 @@ public class Expensa {
         return totalExp;
     }
 
-    public void RegistrarExp(int periodo, float importe, Date fecha_vto, int int_mora, float totalExp, Titular titular){
+    public void RegistrarExpensa(int periodo, float importe, Date fecha_vto, int int_mora, float totalExp, Titular titular){
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Expensas.txt", true))) {
 
             bw.write(titular + "/" + periodo + "/" + importe + "/" + fecha_vto + "/" + int_mora + "/" + totalExp);
