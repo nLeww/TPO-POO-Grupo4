@@ -11,6 +11,61 @@ public class ArchivoVisitas {
     private static final String ARCHIVO_VISITAS_VIGENTE = "visitas_vigente.txt";
     private static final String ARCHIVO_VISITAS_ABIERTAS = "visitas_abiertas.txt";
 
+    public void mostrarVisitasVigentes() {
+        File archivo = new File(ARCHIVO_VISITAS_VIGENTE);
+
+        if (!archivo.exists()) {
+            System.out.println("El archivo de visitas vigentes no existe o está vacío.");
+            return;
+        }
+
+        // Se abre el archivo para lectura utilizando un bloque try-with-resources
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            System.out.println("\n--- REGISTROS DE VISITAS VIGENTES ---");
+
+            while ((linea = br.readLine()) != null) {
+                // Reemplaza los puntos y comas por un formato más legible si lo deseas
+                String[] datos = linea.split(";");
+                if (datos.length >= 3) {
+                    System.out.println("Documento: " + datos[0] + " | Horario: " + datos[1] + " | Lote: " + datos[2]);
+                } else {
+                    System.out.println(linea); // Muestra la línea tal cual si no cumple el formato
+                }
+            }
+            System.out.println("-------------------------------------\n");
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de visitas vigentes: " + e.getMessage());
+        }
+    }
+
+    public void mostrarVisitasAbiertas() {
+        // Usamos la constante que ya tienes declarada arriba en tu archivo
+        File archivo = new File(ARCHIVO_VISITAS_ABIERTAS);
+
+        if (!archivo.exists()) {
+            System.out.println("El archivo de visitas abiertas no existe o está vacío.");
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            System.out.println("\n--- REGISTROS DE VISITAS ABIERTAS ---");
+
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(";");
+                if (datos.length >= 3) {
+                    System.out.println("Documento: " + datos[0] + " | Horario: " + datos[1] + " | Lote: " + datos[2]);
+                } else {
+                    System.out.println(linea);
+                }
+            }
+            System.out.println("-------------------------------------\n");
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de visitas abiertas: " + e.getMessage());
+        }
+    }
+
     public boolean existeEnVigentes(String documento) {
         return buscarDocumentoEnArchivo(ARCHIVO_VISITAS_VIGENTE, documento);
     }
@@ -32,7 +87,7 @@ public class ArchivoVisitas {
         }
     }
 
-    private boolean buscarDocumentoEnArchivo(String rutaArchivo, String documento) {
+    public boolean buscarDocumentoEnArchivo(String rutaArchivo, String documento) {
         File archivo = new File(rutaArchivo);
         if (!archivo.exists()) {
             return false;

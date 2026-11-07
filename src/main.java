@@ -4,6 +4,7 @@ import Orden_y_Expensa.ControladorExpensas;
 import Orden_y_Expensa.ControladorMantenimiento;
 import Orden_y_Expensa.Expensa;
 import Orden_y_Expensa.OrdenMantenimiento;
+import Persistencia.ArchivoVisitas;
 import Reportes.ControladorReportes;
 import excepciones.ReglaNegocioException;
 import lotes.Lote;
@@ -15,6 +16,9 @@ import personas.Habitante;
 import personas.Titular;
 import reclamos.Reclamo;
 import reclamos.TipoReclamo;
+
+import java.sql.SQLOutput;
+import java.util.Scanner;
 
 import java.time.LocalDate;
 
@@ -89,5 +93,133 @@ public class main {
         reportes.morosidadPorLote();
         reportes.equiposFueraDeServicio();
 
+
+        Scanner scanner = new Scanner(System.in);
+
+        String clave = "12345";
+        String usuario = "Ramon";
+
+        System.out.println("Inicio del sistema");
+
+        System.out.println("Menu");
+
+        System.out.println("Ingrese su nombre de usuario y su contrasena (en ese orden)");
+
+        while (true){
+
+            String usuario_ingresa = scanner.nextLine();
+            String clave_ingresa = scanner.nextLine();
+
+            if((usuario_ingresa.equals(usuario)) & (clave_ingresa.equals(clave))){
+                System.out.println("Ingreso de: " + usuario);
+                System.out.println("");
+                System.out.println("==========================================");
+                System.out.println("=================ACCIONES=================");
+                System.out.println("==========================================");
+                System.out.println("1. Ver Visitas");
+                System.out.println("2. Ver Mantenimiento");
+                System.out.println("3. Ver Expensas");
+                System.out.println("4. Ver Reclamos");
+                System.out.println("5. Administrar Dispositivos");
+
+                int opcion = scanner.nextInt();
+
+                switch (opcion) {
+                    case 1:
+                        System.out.println("1. Ver visitas vigentes");
+                        System.out.println("2. Ver visitas pendientes");
+                        System.out.println("3. Buscar visita por documento");
+
+                        int eleccion = scanner.nextInt();
+
+                        if (eleccion == 1){
+
+                            System.out.println("Imprimiendo visitas vigentes");
+                            ArchivoVisitas archivo = new ArchivoVisitas();
+                            archivo.mostrarVisitasVigentes();
+
+                        }
+                        if (eleccion == 2){
+
+                            System.out.println("imprimiendo visitas abiertas");
+                            ArchivoVisitas archivo = new ArchivoVisitas();
+                            archivo.mostrarVisitasAbiertas();
+
+                        }
+                        if (eleccion == 3){
+                            System.out.println("Ingrese el documento a buscar: ");
+                            String documento = scanner.next();
+                            System.out.println("Buscando....");
+                            ArchivoVisitas archivo = new ArchivoVisitas();
+                            archivo.existeEnAbiertas(documento);
+                            archivo.mostrarVisitasVigentes();
+                        }
+                    case 2:
+                        System.out.println("1. Ver todos los dispositivos");
+                        System.out.println("2. Generar orden de Mantenimiento");
+
+                        int eleccion_2 = scanner.nextInt();
+
+                        if (eleccion_2 == 1){
+                            ControladorMantenimiento sistema = new ControladorMantenimiento();
+
+                            System.out.println("=== GENERAR ORDEN DE MANTENIMIENTO ===");
+
+
+                            System.out.print("Ingrese el código del dispositivo: ");
+                            int codigoDispositivo = scanner.nextInt();
+                            scanner.nextLine();
+
+                            LocalDate fechaActual = LocalDate.now();
+
+                            EmpleadoMantenimiento empleado = new EmpleadoMantenimiento(456,"Rodrigo",LocalDate.now(), Especialidad.ELECTRICIDAD);
+
+
+                            System.out.print("Ingrese la descripción de la falla: ");
+                            String descripcionFalla = scanner.nextLine();
+
+
+                            try {
+                                System.out.println("\nProcesando la solicitud...");
+
+                                OrdenMantenimiento nuevaOrden = sistema.generarOrden(
+                                        codigoDispositivo,
+                                        empleado,
+                                        fechaActual,
+                                        descripcionFalla
+                                );
+
+
+                                System.out.println("¡Orden generada exitosamente!");
+                                System.out.println("ID Orden: " + nuevaOrden.toString());
+
+                            } catch (IllegalArgumentException e) {
+
+                                System.out.println("Error de validación: " + e.getMessage());
+
+                            } catch (ReglaNegocioException e) {
+
+                                System.out.println("Error de negocio: " + e.getMessage());
+
+                            } catch (Exception e) {
+
+                                System.out.println("Ocurrió un error inesperado: " + e.getMessage());
+                            }
+
+                        }
+                }
+
+
+            }
+
+        }
+
     }
+
+
+
+
+
+
+
 }
