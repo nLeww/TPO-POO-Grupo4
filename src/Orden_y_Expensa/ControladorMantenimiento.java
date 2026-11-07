@@ -66,6 +66,10 @@ public class ControladorMantenimiento {
         return orden;
     }
 
+    public List<Dispositivo> obtenerDispositivos() {
+        return new ArrayList<>(dispositivos);
+    }
+
     public void mostrarEstados() {
         for (Dispositivo d : dispositivos) {
             System.out.println(d.getCodigo() + " " + d.getSector() + " " + d.getEstado());

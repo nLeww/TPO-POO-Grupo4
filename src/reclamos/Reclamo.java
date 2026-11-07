@@ -144,6 +144,7 @@ public class Reclamo {
 
         this.historial = new ArrayList<>();
         registrarCambioEstado("Reclamo creado");
+        lote.agregarReclamo(this);
     }
 
     //Getters y Setters

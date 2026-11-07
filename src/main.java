@@ -4,6 +4,7 @@ import Orden_y_Expensa.ControladorExpensas;
 import Orden_y_Expensa.ControladorMantenimiento;
 import Orden_y_Expensa.Expensa;
 import Orden_y_Expensa.OrdenMantenimiento;
+import Reportes.ControladorReportes;
 import excepciones.ReglaNegocioException;
 import lotes.Lote;
 import pagos.MedioPago;
@@ -12,6 +13,8 @@ import personal.EmpleadoMantenimiento;
 import personal.Especialidad;
 import personas.Habitante;
 import personas.Titular;
+import reclamos.Reclamo;
+import reclamos.TipoReclamo;
 
 import java.time.LocalDate;
 
@@ -74,6 +77,17 @@ public class main {
         } catch (ReglaNegocioException e) {
             System.out.println("Error: " + e.getMessage());
         }
+
+        System.out.println("\n");
+
+        ControladorReportes reportes = new ControladorReportes(ctrlMant);
+
+        Reclamo seguridad = new Reclamo(23, TipoReclamo.SEGURIDAD, "Porton roto", l1, t1);
+        Reclamo convivencia = new Reclamo(24, TipoReclamo.CONVIVENCIA, "Ruidos", l1, t1);
+
+        reportes.reclamosPendientes();
+        reportes.morosidadPorLote();
+        reportes.equiposFueraDeServicio();
 
     }
 }

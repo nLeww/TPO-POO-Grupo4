@@ -1,0 +1,17 @@
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Datos generados
+lotes.txt
+habitantes.txt
+expensas.txt
+pagos.txt
+dispositivos.txt
+ordenes.txt
+empleados.txt
+reclamos.txt
+historial.txt
+autorizaciones.txt
+ingresos.txt

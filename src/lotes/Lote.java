@@ -8,6 +8,7 @@ import personas.Titular;
 
 import java.util.List;
 import java.util.ArrayList;
+import reclamos.Reclamo;
 
 public class Lote {
     private int numero;
@@ -18,6 +19,7 @@ public class Lote {
     private boolean Tardio;
     public static List<Lote> lotes = new ArrayList<>(); //Para almacenar los lotes
     private List<Pago> pagos;
+    private List<Reclamo> reclamos;
 
     public void agregarHabitante(Habitante h) throws ReglaNegocioException {
         if (h==null){throw new IllegalArgumentException("Habitante no puede ser nulo");}
@@ -38,6 +40,7 @@ public class Lote {
         habitantes = new ArrayList<>();
         expensas = new ArrayList<>();
         pagos = new ArrayList<>();
+        reclamos = new ArrayList<>();
         Tardio = false;
 
         lotes.add(this); //lista que contendra todos los lotes
@@ -119,6 +122,14 @@ public class Lote {
         pagos.add(pago);
     }
 
+    public void agregarReclamo(Reclamo reclamo) {
+        reclamos.add(reclamo);
+    }
+
+    public List<Reclamo> obtenerReclamos() {
+        return new ArrayList<>(reclamos);
+    }
+
     public boolean actualizarMorosidad() {
         int impagos = contarPeriodosImpagos();
 
@@ -162,6 +173,11 @@ public class Lote {
         return new ArrayList<>(expensas);
     }
 
+    public void cargarPago(Pago pago) {
+        pagos.add(pago);
+    }
+
+    public List<Pago> obtenerPagos() {return new ArrayList<>(pagos);}
 
     public int getNumero() {
         return numero;

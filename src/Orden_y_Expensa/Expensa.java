@@ -1,13 +1,10 @@
 package Orden_y_Expensa;
 
 import excepciones.ReglaNegocioException;
-import personas.Titular;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 public class Expensa {
     public int periodo;
@@ -35,6 +32,17 @@ public class Expensa {
         this.fechaUltimoCalculoInteres = fecha_vto;
     }
 
+    // para cargar una expensa desde un archivo
+    public Expensa(int periodo, float importe, double capitalPagado, double interesesPagados,
+                   double interesesGenerados, LocalDate fechaUltimoCalculoInteres) {
+        this.periodo = periodo;
+        this.importe = importe;
+        this.capitalPagado = capitalPagado;
+        this.interesesPagados = interesesPagados;
+        this.interesesGenerados = interesesGenerados;
+        this.fechaUltimoCalculoInteres = fechaUltimoCalculoInteres;
+    }
+
     public int getPeriodo() {
         return periodo;
     }
@@ -46,6 +54,14 @@ public class Expensa {
     public int getInt_mora() {
         return int_mora;
     }
+
+    public double getCapitalPagado() {return capitalPagado;}
+
+    public double getInteresesPagados() {return interesesPagados;}
+
+    public double getInteresesGenerados() {return interesesGenerados;}
+
+    public LocalDate getFechaUltimoCalculoInteres() {return fechaUltimoCalculoInteres;}
 
     public double calcularInteresesPorMora() {
         LocalDate fechaActual = LocalDate.now();
@@ -63,18 +79,7 @@ public class Expensa {
         return LocalDate.now().isAfter(fecha_vto);
     }
 
-    public void RegistrarExpensa(int periodo, float importe, LocalDate fecha_vto, int int_mora, float totalExp, Titular titular){
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Expensas.txt", true))) {
-
-            bw.write(titular + "/" + periodo + "/" + importe + "/" + fecha_vto + "/" + int_mora + "/" + totalExp);
-
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
-    }
-
-    public double registrarPago(double monto) throws ReglaNegocioException {
+    public double registrarPago(double monto) {
         double intereses = obtenerInteresesPendientes();
         if (monto <= intereses) { //si el monto no cubre todos los intereses
             interesesPagados += monto;
@@ -90,20 +95,6 @@ public class Expensa {
         capitalPagado += saldo;
         return monto - saldo;
 
-    }
-
-    public void LeerReclamos(){
-        try(BufferedReader br = new BufferedReader(new FileReader("Registro_de_Expensas.txt"))){
-
-            String linea;
-
-            while ((linea = br.readLine()) != null){
-                System.out.println(linea);
-            }
-
-        } catch (IOException ex){
-            throw new RuntimeException(ex);
-        }
     }
 
     public double obtenerSaldoPendiente() {
