@@ -14,6 +14,7 @@ import personal.EmpleadoMantenimiento;
 import personal.Especialidad;
 import personas.Habitante;
 import personas.Titular;
+import reclamos.HistorialReclamo;
 import reclamos.Reclamo;
 import reclamos.TipoReclamo;
 
@@ -114,13 +115,12 @@ public class main {
                 System.out.println("Ingreso de: " + usuario);
                 System.out.println("");
                 System.out.println("==========================================");
-                System.out.println("=================ACCIONES=================");
+                System.out.println("===================MENU===================");
                 System.out.println("==========================================");
                 System.out.println("1. Ver Visitas");
                 System.out.println("2. Ver Mantenimiento");
                 System.out.println("3. Ver Expensas");
                 System.out.println("4. Ver Reclamos");
-                System.out.println("5. Administrar Dispositivos");
 
                 int opcion = scanner.nextInt();
 
@@ -163,6 +163,13 @@ public class main {
                         if (eleccion_2 == 1){
                             ControladorMantenimiento sistema = new ControladorMantenimiento();
 
+                            sistema.obtenerDispositivos();
+
+                        }
+
+                        if (eleccion_2 == 2){
+                            ControladorMantenimiento sistema = new ControladorMantenimiento();
+
                             System.out.println("=== GENERAR ORDEN DE MANTENIMIENTO ===");
 
 
@@ -172,7 +179,14 @@ public class main {
 
                             LocalDate fechaActual = LocalDate.now();
 
-                            EmpleadoMantenimiento empleado = new EmpleadoMantenimiento(456,"Rodrigo",LocalDate.now(), Especialidad.ELECTRICIDAD);
+                            System.out.println("Legajo: ");
+                            int legajo = scanner.nextInt();
+                            System.out.println("Nombre: ");
+                            String nombre = scanner.nextLine();
+                            System.out.println("Especialidad: ");
+                            String entradaEspecialidad = scanner.nextLine().toUpperCase().trim();
+
+                            EmpleadoMantenimiento empleado = new EmpleadoMantenimiento(legajo,nombre,LocalDate.now(), Especialidad.valueOf(entradaEspecialidad));
 
 
                             System.out.print("Ingrese la descripción de la falla: ");
@@ -206,8 +220,71 @@ public class main {
                                 System.out.println("Ocurrió un error inesperado: " + e.getMessage());
                             }
 
+                            if (eleccion_2 == 3){
+                                System.out.println("Para buscar, ingrese el codigo del dispositivo: ");
+                                int codigo = scanner.nextInt();
+                                ControladorMantenimiento sistema_2 = new ControladorMantenimiento();
+                                sistema_2.buscarDispositivo(codigo);
+
+                            }
+
                         }
+
+                    case 3:
+                        System.out.println("1. Consultar deuda de lote");
+                        System.out.println("2. Mostrar detalles de deuda");
+
+                        int eleccion_3 = scanner.nextInt();
+
+                        if (eleccion_3 == 1) {
+                            ControladorExpensas expensas = new ControladorExpensas();
+
+                            System.out.println("Ingrese el numero de lote que desea ver: ");
+                            int lote = scanner.nextInt();;
+
+                            expensas.consultarDeuda(lote);
+
+                        }
+
+                        if (eleccion_3 == 2) {
+                            ControladorExpensas expensas = new ControladorExpensas();
+
+                            System.out.println("Ingrese el numero de lote que desea ver: ");
+                            int lote = scanner.nextInt();;
+
+                            expensas.mostrarDetalleDeuda(lote);
+
+                        }
+
+                    case 4:
+                        System.out.println("1. Ver el historial de reclamos");
+
+                        int eleccion_4 = scanner.nextInt();;
+
+                        if (eleccion_4 == 1){
+                            try {
+
+                                Reclamo miReclamo = new Reclamo();
+
+                                miReclamo.asignarResponsable();
+
+                                System.out.println("Responsable asignado correctamente.");
+
+                            } catch (ReglaNegocioException e) {
+
+                                System.err.println("Error de negocio: " + e.getMessage());
+
+                            } catch (IllegalArgumentException e) {
+
+                                System.err.println("Error de argumento: " + e.getMessage());
+                            }
+
+
+                        }
+
+
                 }
+
 
 
             }
