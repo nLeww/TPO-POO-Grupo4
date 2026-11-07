@@ -1,12 +1,14 @@
-import lotes.ControladorLote;
+import Orden_y_Expensa.ControladorExpensas;
+import Orden_y_Expensa.Expensa;
 import lotes.Lote;
 import personas.Habitante;
 import personas.Titular;
 
+import java.time.LocalDate;
+
 public class main {
     public static void main(String[] args) {
-
-        ControladorLote contLote = new ControladorLote(); //Metodo que se llama al inciio para crear el controlador
+        ControladorExpensas controlExpensas = new ControladorExpensas();
 
         Titular t1 = new Titular("Jose","Martinez",22549021);
 
@@ -19,14 +21,14 @@ public class main {
         l1.agregarHabitante(h2);
 
         Lote l2 = new Lote(102,12,t1);
+        l2.obtenerExpensas();
 
-        contLote.agregarLote(l1); //deberian llamarse junto a la creacion de lote
-        contLote.agregarLote(l2);
+        Expensa exp1 = new Expensa(202610, 100000);
+        Expensa exp2 = new Expensa(202611, 100000);
 
-        contLote.listarLotes();
+        l1.agregarExpensa(exp1);
+        l1.agregarExpensa(exp2);
 
-
-
-
+        controlExpensas.mostrarDetalleDeuda(101);
     }
 }

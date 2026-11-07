@@ -1,6 +1,7 @@
 package lotes;
 
 import Orden_y_Expensa.Expensa;
+import excepciones.ReglaNegocioException;
 import personas.Habitante;
 import personas.Titular;
 
@@ -12,13 +13,14 @@ public class Lote {
     private double superficie;
     private Titular titular;
     private List<Habitante> habitantes;
+    private List<Expensa> expensas;
     private boolean Tardio;
     public static List<Lote> lotes = new ArrayList<>(); //Para almacenar los lotes
 
-    public void agregarHabitante(Habitante h){
-        if (h==null){throw new IllegalArgumentException("personas.Habitante no puede ser nulo");}
+    public void agregarHabitante(Habitante h) throws ReglaNegocioException {
+        if (h==null){throw new IllegalArgumentException("Habitante no puede ser nulo");}
         for (Habitante habitante : habitantes){
-            if (habitante.getDocumento() == h.getDocumento()){ throw new IllegalArgumentException("El habitante ya esta registrado");}
+            if (habitante.getDocumento() == h.getDocumento()){ throw new ReglaNegocioException("El habitante ya esta registrado");}
         }
         habitantes.add(h);
     }
@@ -32,14 +34,46 @@ public class Lote {
         this.superficie = superficie;
         this.titular = titular;
         habitantes = new ArrayList<>();
+        expensas = new ArrayList<>();
         Tardio = false;
 
         lotes.add(this); //lista que contendra todos los lotes
 
     }
-public static void getListaLotes(){
-        
-}
+
+    public static void listarLotes(){
+        System.out.println("Lotes: ");
+        for (Lote lote : lotes){
+            System.out.println(lote);
+        }
+    }
+
+    public static Lote buscarLote(int numero) {
+        for (Lote lote : lotes) {
+            if (lote.getNumero() == numero) {
+                return lote;
+            }
+        }
+        return null;
+    }
+
+
+    public void agregarExpensa(Expensa expensa) throws ReglaNegocioException {
+        if (expensa == null) {
+            throw new IllegalArgumentException("La expensa no puede ser nula");
+        }
+
+        for (Expensa exp : expensas) {
+            if (exp.getPeriodo() == expensa.getPeriodo()) {
+                throw new ReglaNegocioException("Ya existe una expensa para ese periodo");
+            }
+        }
+        expensas.add(expensa);
+    }
+
+    public List<Expensa> obtenerExpensas() {
+        return new ArrayList<>(expensas);
+    }
 
 
     public int getNumero() {

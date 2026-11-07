@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import excepciones.ReglaNegocioException;
 import lotes.Lote;
 import personas.Persona;
 import personal.Personal;
@@ -32,13 +33,13 @@ public class Reclamo {
         };
     }
 
-    public void asignarResponsable(Personal empleado) {
+    public void asignarResponsable(Personal empleado) throws ReglaNegocioException {
         if (empleado == null) {
             throw new IllegalArgumentException(
                     "El empleado no puede ser nulo");
         }
         if (estado != EstadoReclamo.ABIERTO) {
-            throw new IllegalStateException(
+            throw new ReglaNegocioException(
                     "Solo se pueden asignar reclamos abiertos");
         }
         this.responsable = empleado;
@@ -47,7 +48,7 @@ public class Reclamo {
         registrarCambioEstado("Asignado al empleado " + empleado.getNombre());
     }
 
-    public void avanzarEstado(String desc) {
+    public void avanzarEstado(String desc) throws ReglaNegocioException {
 
         if (desc == null || desc.isBlank()) {
             throw new IllegalArgumentException(
@@ -56,7 +57,7 @@ public class Reclamo {
 
         switch (estado) {
             case ABIERTO:
-                throw new IllegalStateException(
+                throw new ReglaNegocioException(
                         "No hay responsable asignado al reclamo");
             case ASIGNADO:
                 estado = EstadoReclamo.EN_CURSO;
@@ -68,7 +69,7 @@ public class Reclamo {
                 estado = EstadoReclamo.CERRADO;
                 break;
             case CERRADO:
-                throw new IllegalStateException(
+                throw new ReglaNegocioException(
                         "El reclamo ya esta cerrado");
         }
         registrarCambioEstado(desc);
@@ -85,14 +86,14 @@ public class Reclamo {
     }
 
 
-    public void reabrir(Persona solicitante) {
+    public void reabrir(Persona solicitante) throws ReglaNegocioException {
 
         if (estado != EstadoReclamo.RESUELTO) {
-            throw new IllegalStateException("Solo se pueden reabrir reclamos resueltos");
+            throw new ReglaNegocioException("Solo se pueden reabrir reclamos resueltos");
         }
 
         if (solicitante == null || !(persona.getDocumento() == solicitante.getDocumento())) { //si el solicitante esta vacio, o el doc de la persona es distinto al del solicitante
-            throw new IllegalArgumentException("Solo quien presento el reclamo puede reabrirlo");
+            throw new ReglaNegocioException("Solo quien presento el reclamo puede reabrirlo");
         }
 
         LocalDateTime fechaResolucion = null;
@@ -107,12 +108,12 @@ public class Reclamo {
         }
 
         if (fechaResolucion == null) { //si no tiene fecha de resolucion no se reabre
-            throw new IllegalStateException("No se encontro la fecha de resolucion");
+            throw new ReglaNegocioException("No se encontro la fecha de resolucion");
         }
 
         if (LocalDateTime.now().isAfter( //si es mayor a 5 no se reabre
                 fechaResolucion.plusDays(5))) {
-            throw new IllegalStateException("El plazo de reapertura ya vencio");
+            throw new ReglaNegocioException("El plazo de reapertura ya vencio");
         }
 
         estado = EstadoReclamo.ASIGNADO;
