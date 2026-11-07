@@ -8,6 +8,7 @@ import excepciones.ReglaNegocioException;
 import lotes.Lote;
 import personas.Persona;
 import personal.Personal;
+import personal.EmpleadoMantenimiento;
 
 public class Reclamo {
 
@@ -19,7 +20,7 @@ public class Reclamo {
     private EstadoReclamo estado;
     private Lote lote;
     private Persona persona;
-    private Personal responsable;
+    private EmpleadoMantenimiento responsable;
     private List<HistorialReclamo> historial;
 
     private PrioridadReclamo calcularPrioridad(
@@ -33,7 +34,7 @@ public class Reclamo {
         };
     }
 
-    public void asignarResponsable(Personal empleado) throws ReglaNegocioException {
+    public void asignarResponsable(EmpleadoMantenimiento empleado) throws ReglaNegocioException {
         if (empleado == null) {
             throw new IllegalArgumentException(
                     "El empleado no puede ser nulo");
@@ -60,6 +61,8 @@ public class Reclamo {
                 throw new ReglaNegocioException(
                         "No hay responsable asignado al reclamo");
             case ASIGNADO:
+                if (responsable.contarReclamosEnCurso() >= 5) {
+                    throw new ReglaNegocioException("El empleado ya tiene 5 reclamos en curso");}
                 estado = EstadoReclamo.EN_CURSO;
                 break;
             case EN_CURSO:
@@ -176,9 +179,7 @@ public class Reclamo {
         return persona;
     }
 
-    public Personal getResponsable() {
-        return responsable;
-    }
+    public EmpleadoMantenimiento getResponsable() {return responsable;}
 
     public List<HistorialReclamo> getHistorial() {
         return new ArrayList<>(historial);
