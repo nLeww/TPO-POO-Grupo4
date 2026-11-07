@@ -1,21 +1,28 @@
 package Dispositivos;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class CamaraSeguridad extends Dispositivo{
 
     public String Resolucion;
 
     public int DiasGrabados;
 
-    public CamaraSeguridad(int codigo, String sector) {
-        super(codigo, sector);
+    public CamaraSeguridad(int codigo, String sector, LocalDate fechaInstalacion) {
+        super(codigo, sector, fechaInstalacion);
     }
 
-    public CamaraSeguridad(int codigo, String sector, String resolucion, int diasGrabados) {
-        super(codigo, sector);
+    public CamaraSeguridad(int codigo, String sector,LocalDate fechaInstalacion, String resolucion, int diasGrabados) {
+        super(codigo, sector, fechaInstalacion);
         Resolucion = resolucion;
         DiasGrabados = diasGrabados;
     }
 
+    @Override
+    public PrioridadOrden calcularPrioridadOrden(List<Dispositivo> dispositivos) {
+        return PrioridadOrden.ALTA;
+    }
 
     public String getResolucion() {
         return Resolucion;
