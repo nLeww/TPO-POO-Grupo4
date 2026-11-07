@@ -56,4 +56,16 @@ Si se ingresa a "Ver Reclamos", aparecera el siguiente menu:
 
 ----------------
 
+Por ultimo, este trabajo practico resulto de bastante utilidad para ambos para entender de forma completa el funcionamiento
+de un programa tan importante como lo es java. Despues de hacer diagramas y de planificar como 
+iba a ser el programa, hubo varios problemas que tuvimos que resolver, como la permanencia de los datos
+y el flujo de la interfaz, ademas de estructurar ciertas funciones. Fue un trabajo interesante y divertido de realizar.
+
+El programa, aunque no cambio mucho a como lo teniamos planificado, si nos dio una perspectiva importante de como
+la planificacion, diagramacion y ejecucion de un plan hace la diferencia respecto a simplemente ponerse a trabajar sin una meta clara
+, lo cual, nos deja como aprendizaje, que no es para nada recomendable. Agradecemos la oportunidad que nos dio la docente en esta mitad de año de
+participar en este curso y la energia que puso en cada clase.
+
+Atte. Grupo 4, Nicolas Lew y Bruno Belasquez
+
 
