@@ -1,19 +1,26 @@
 package personas;
 
+import personal.EmpleadoMantenimiento;
+
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Visita {
 
     private LocalDate fecha;
     private LocalTime horarioVisita;
-    private int loteVisita;
+    private int numero;
+
+    public static ArrayList<Visita> visitas = new ArrayList<>();
 
 
-    public Visita(LocalDate fecha, LocalTime horarioVisita, int loteVisita) {
+    public Visita(LocalDate fecha, LocalTime horarioVisita, int numero) {
         this.fecha = fecha;
         this.horarioVisita = horarioVisita;
-        this.loteVisita = loteVisita;
+        this.numero = numero;
     }
 
     public LocalDate getFecha() {
@@ -33,11 +40,9 @@ public class Visita {
     }
 
     public int getLoteVisita() {
-        return loteVisita;
+        return numero;
     }
 
-    public void setLoteVisita(int loteVisita) {
-        this.loteVisita = loteVisita;
-    }
+    public void setnumero(int numero) {this.numero = numero;}
 
 }

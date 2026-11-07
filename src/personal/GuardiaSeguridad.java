@@ -1,6 +1,8 @@
 package personal;
 
+import java.io.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 public class GuardiaSeguridad extends Personal {
     private Turno turno;
@@ -18,4 +20,11 @@ public class GuardiaSeguridad extends Personal {
     public String toString() {
         return super.toString() + " " + turno + " " + puesto;
     }
+
+    public void buscarAurorizacionVigente(int documento){
+
+    }
+
+
 }
+
