@@ -12,7 +12,7 @@ import java.util.Date;
 public class Expensa {
     public int periodo;
     public float importe;
-    private float capitalPagado;
+    private double capitalPagado;
     private double interesesPagados;
     public LocalDate fecha_vto;
     public int int_mora;
@@ -59,8 +59,9 @@ public class Expensa {
         return interesesGenerados;
     }
 
-
-
+    public boolean estaVencida() {
+        return LocalDate.now().isAfter(fecha_vto);
+    }
 
     public void RegistrarExpensa(int periodo, float importe, LocalDate fecha_vto, int int_mora, float totalExp, Titular titular){
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registro_de_Expensas.txt", true))) {
@@ -73,19 +74,22 @@ public class Expensa {
 
     }
 
-    public void registrarPago(float monto) throws ReglaNegocioException {
-        if (monto <= 0) {throw new IllegalArgumentException("El monto debe ser mayor a cero");}
+    public double registrarPago(double monto) throws ReglaNegocioException {
+        double intereses = obtenerInteresesPendientes();
+        if (monto <= intereses) { //si el monto no cubre todos los intereses
+            interesesPagados += monto;
+            return 0;
+        }
+        interesesPagados += intereses;
+        monto = monto - intereses; //el monto cubre el interes
+        double saldo = obtenerSaldoPendiente();
+        if (monto <= saldo) { //si el monto cubre tdo el saldo pendiente
+            capitalPagado += monto;
+            return 0;
+        }
+        capitalPagado += saldo;
+        return monto - saldo;
 
-        double interesesPendientes = obtenerInteresesPendientes();
-        double deudaTotal = obtenerSaldoPendiente() + interesesPendientes;
-
-        if (monto > deudaTotal) {throw new ReglaNegocioException("El pago supera la deuda pendiente");}
-
-        double pagoIntereses = Math.min(monto, interesesPendientes);
-        interesesPagados += pagoIntereses;
-
-        double restante = monto - pagoIntereses;
-        capitalPagado += restante;
     }
 
     public void LeerReclamos(){

@@ -2,6 +2,7 @@ package lotes;
 
 import Orden_y_Expensa.Expensa;
 import excepciones.ReglaNegocioException;
+import pagos.Pago;
 import personas.Habitante;
 import personas.Titular;
 
@@ -16,6 +17,7 @@ public class Lote {
     private List<Expensa> expensas;
     private boolean Tardio;
     public static List<Lote> lotes = new ArrayList<>(); //Para almacenar los lotes
+    private List<Pago> pagos;
 
     public void agregarHabitante(Habitante h) throws ReglaNegocioException {
         if (h==null){throw new IllegalArgumentException("Habitante no puede ser nulo");}
@@ -35,6 +37,7 @@ public class Lote {
         this.titular = titular;
         habitantes = new ArrayList<>();
         expensas = new ArrayList<>();
+        pagos = new ArrayList<>();
         Tardio = false;
 
         lotes.add(this); //lista que contendra todos los lotes
@@ -69,6 +72,90 @@ public class Lote {
             }
         }
         expensas.add(expensa);
+    }
+
+    public double calcularDeudaTotal() {
+        double total = 0;
+        for (Expensa e : expensas) {
+            total += e.obtenerSaldoPendiente() + e.obtenerInteresesPendientes();
+        }
+        return total;
+    }
+
+    private Expensa buscarMasAntiguaConDeuda() {
+        Expensa masAntigua = null;
+
+        for (Expensa e : expensas) {
+            double deuda = e.obtenerSaldoPendiente() + e.obtenerInteresesPendientes();
+
+            if (deuda > 0) {
+                if (masAntigua == null) {
+                    masAntigua = e;
+                } else if (e.getPeriodo() < masAntigua.getPeriodo()) {
+                    masAntigua = e;
+                }
+            }
+        }
+        return masAntigua;
+    }
+
+    public void registrarPago(Pago pago) throws ReglaNegocioException {
+        if (pago == null) {
+            throw new IllegalArgumentException("El pago no puede ser nulo");
+        }
+        if (pago.getImporte() > calcularDeudaTotal()) {
+            throw new ReglaNegocioException("El pago supera la deuda pendiente del lote");
+        }
+
+        double restante = pago.getImporte();
+
+        while (restante > 0) {
+            Expensa masAntigua = buscarMasAntiguaConDeuda();
+            if (masAntigua == null) {
+                break;
+            }
+            restante = masAntigua.registrarPago(restante);
+        }
+        pagos.add(pago);
+    }
+
+    public boolean actualizarMorosidad() {
+        int impagos = contarPeriodosImpagos();
+
+        if (!Tardio && impagos > 3) {
+            Tardio = true;
+            return true;
+        }
+        if (Tardio && impagos == 0) {
+            Tardio = false;
+        }
+        return false;
+    }
+
+    public boolean estaMoroso() {
+        return Tardio;
+    }
+
+    public int contarPeriodosImpagos() {
+        int cantidad = 0;
+        for (Expensa e : expensas) {
+            if (e.estaVencida() && e.obtenerSaldoPendiente() > 0) {
+                cantidad++;
+            }
+        }
+        return cantidad;
+    }
+    public void verificarMorosidad(int numeroLote) {
+        Lote lote = Lote.buscarLote(numeroLote);
+        if (lote == null) {
+            throw new IllegalArgumentException("No existe un lote con ese numero");
+        }
+
+        boolean nuevoMoroso = lote.actualizarMorosidad();
+
+        if (nuevoMoroso) {
+            System.out.println("NOTIFICACION FORMAL a " + lote.getTitular() + ": el lote " + numeroLote + " tiene mas de 3 periodos impagos.");
+        }
     }
 
     public List<Expensa> obtenerExpensas() {

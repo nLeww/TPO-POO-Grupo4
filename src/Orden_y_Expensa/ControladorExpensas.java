@@ -1,7 +1,10 @@
 
 package Orden_y_Expensa;
 
+import excepciones.ReglaNegocioException;
 import lotes.Lote;
+import pagos.Pago;
+
 import java.util.List;
 
 public class ControladorExpensas {
@@ -23,6 +26,13 @@ public class ControladorExpensas {
         return deudaTotal;
     }
 
+    public void registrarPago(int numeroLote, Pago pago) throws ReglaNegocioException {
+        Lote lote = Lote.buscarLote(numeroLote);
+        if (lote == null) {
+            throw new IllegalArgumentException("No existe un lote con ese numero");
+        }
+        lote.registrarPago(pago);
+    }
 
     public void mostrarDetalleDeuda(int numeroLote) {
         Lote lote = Lote.buscarLote(numeroLote);
