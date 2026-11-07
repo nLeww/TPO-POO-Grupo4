@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Visita {
-
+    private String documento;
     private LocalDate fecha;
     private LocalTime horarioVisita;
     private int numero;

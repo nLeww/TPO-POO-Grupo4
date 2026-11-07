@@ -42,8 +42,6 @@ public class ControladorVisitas {
     }
 
 
-
-
     private boolean crearIngreso(String documento, LocalDateTime fechaHora, int numero) {
         try {
             Visita nuevaVisita = new Visita(fechaHora.toLocalDate(), fechaHora.toLocalTime(), numero);
