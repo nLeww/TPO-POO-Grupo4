@@ -87,6 +87,33 @@ public class ArchivoVisitas {
         }
     }
 
+    public boolean registrarAutorizacion(String documento, String nombre, LocalDate fecha, LocalTime horaDesde, LocalTime horaHasta, int numeroLote) {
+
+        if (documento.isBlank() || nombre.isBlank()) {
+            System.out.println("Los datos no pueden estar vacios.");
+            return false;
+        }
+
+        if (existeEnVigentes(documento)) {
+            System.out.println("Ya existe una autorizacion vigente para ese documento.");
+            return false;
+        }
+
+        try (FileWriter fw = new FileWriter("visitas_vigente.txt", true);
+             BufferedWriter bw = new BufferedWriter(fw)) {
+
+            bw.write(documento + ";" + horaDesde + ";" + numeroLote
+                    + ";" + nombre + ";" + fecha + ";" + horaHasta);
+            bw.newLine();
+
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("Error al guardar la autorizacion: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean buscarDocumentoEnArchivo(String rutaArchivo, String documento) {
         File archivo = new File(rutaArchivo);
         if (!archivo.exists()) {
